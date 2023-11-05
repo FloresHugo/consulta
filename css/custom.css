@@ -1,0 +1,56 @@
+.h {
+  font-size: 2em;
+}
+
+#map {
+  height: 30rem;
+}
+
+th {
+  background: #e6e6e6;
+}
+
+.here {
+  background: #dff0d8;
+}
+
+.atypical {
+  background-color: #f9f2ec;
+}
+
+.longSt {
+  background-color: #fff0e6;
+}
+
+.at-lon {
+  background-color: #f9ffe6;
+}
+
+
+.info {
+  width: 20px;
+  height: 20px;
+  border: 1px solid;
+}
+
+.date {
+  width: 15% !important;
+}
+@media (max-width: 575.98px) {
+  .mobile-width {
+    width: 150px;
+    height: 140px;
+    margin-bottom: 0.25rem;
+  }
+  .mobile-description{
+    font-size: 14px;
+  }
+
+  
+}
+#back {
+  z-index: 1;
+  position: fixed;
+  left: 13px;
+  top: 16px;
+}

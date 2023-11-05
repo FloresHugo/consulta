@@ -1,0 +1,64 @@
+/*div principal del datepicker*/
+.ui-datepicker
+{
+width: auto;
+background: var(--primary);
+}
+
+/*Tabla con los días del mes*/
+.ui-datepicker table
+{
+font-size: 1.5rem;
+}
+
+/*La cabecera*/
+.ui-datepicker .ui-datepicker-header
+{
+font-size: 1rem;
+background: #FFFFFF;
+}
+
+/*Para los días de la semana: Sa Mo ... */
+.ui-datepicker th
+{
+color: var(--default-color);
+}
+.ui-widget.ui-widget-content {
+    border-radius: 0.5rem;
+}
+
+/*Para items con los días del mes por defecto */
+.ui-datepicker .ui-state-default
+{
+background: var(--default-color);
+text-align: center;
+margin:0.050rem;
+}
+
+/*Para el item del día del mes seleccionado */
+.ui-datepicker .ui-state-active
+{
+background: #61e3ff;
+color: #FFFFFF;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    border: 1px solid #61e3ff;
+    background: #d1f7ff;
+    color: var(--primary);
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+  border-radius: 0.75rem;
+}
+.ui-datepicker-month, .ui-datepicker-year{
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }

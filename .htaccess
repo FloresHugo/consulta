@@ -1,0 +1,17 @@
+RewriteBase /
+RewriteEngine On
+#RewriteRule ^historico/(.*)$ historico.php?slug=$1
+# RewriteRule ^view/(.*)$ view.php?slug=$1
+# RewriteRule ^panel-admin/editar/(.*)$ panel-admin/editar.php?menu=$1
+RewriteRule ^consulta/(.*)$ consulta.php?permiso=$1
+
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
+
+Options All -Indexes

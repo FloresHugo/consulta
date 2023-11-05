@@ -1,0 +1,78 @@
+@font-face {
+    font-family: Mont-Regular;
+    src: url(/assets/fonts/Mont-Regular.aabc10a.woff2) format("woff2"),
+    url(/assets/fonts/Mont-Regular.10d9837.woff) format("woff");
+    font-weight: "400";
+    font-style: normal
+}
+
+@font-face {
+    font-family: Mont-SemiBold;
+    src: url(/assets/fonts/Mont-SemiBold.2b252d1.woff2) format("woff2"),
+    url(/assets/fonts/Mont-SemiBold.6e3fdff.woff) format("woff");
+    font-weight: "600";
+    font-style: normal
+}
+
+@font-face {
+    font-family: Mont-Bold;
+    src: url(/assets/fonts/Mont-Bold.7918754.woff2) format("woff2"),
+    url(/assets/fonts/Mont-Bold.234395b.woff) format("woff");
+    font-weight: "700";
+    font-style: normal
+}
+
+:root{
+  --dark-sky-color: rgb(14,67,109);
+  --bay-water-color: rgb(73,200,245);
+  --default-color: #4d4d4d;
+  --default-font-family: "Mont-Regular",serif;
+  --default-font-family-bold: "Mont-Bold",serif;
+  --default-font-family-semibold: "Mont-SemiBold",serif;
+}
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bay-water-color) var(--dark-sky-color);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--dark-sky-color);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bay-water-color);
+  border-radius: 20px;
+  border: 1px solid var(--dark-sky-color);
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] { -moz-appearance:textfield; }
+body{
+  font-family: var(--default-font-family);
+  color: var(--default-color);
+}
+
+.c-brand{
+  width: 16rem;
+  margin-left: 5rem;
+}
+.sina-nav{
+  background-color: var(--dark-sky-color);
+  color: #fff;
+  border: none;
+}
+.navbar-nav .dropdown-menu {
+    position: absolute;
+    float: none;
+}

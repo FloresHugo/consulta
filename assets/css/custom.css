@@ -1,0 +1,212 @@
+@font-face {
+    font-family: Mont-Regular;
+    src: url(/assets/fonts/Mont-Regular.aabc10a.woff2) format("woff2"),
+    url(/assets/fonts/Mont-Regular.10d9837.woff) format("woff");
+    font-weight: "400";
+    font-style: normal
+}
+
+@font-face {
+    font-family: Mont-SemiBold;
+    src: url(/assets/fonts/Mont-SemiBold.2b252d1.woff2) format("woff2"),
+    url(/assets/fonts/Mont-SemiBold.6e3fdff.woff) format("woff");
+    font-weight: "600";
+    font-style: normal
+}
+
+@font-face {
+    font-family: Mont-Bold;
+    src: url(/assets/fonts/Mont-Bold.7918754.woff2) format("woff2"),
+    url(/assets/fonts/Mont-Bold.234395b.woff) format("woff");
+    font-weight: "700";
+    font-style: normal
+}
+
+:root{
+  --dark-sky-color: rgb(14,67,109);
+  --bay-water-color: rgb(73,200,245);
+  --default-color: #4d4d4d;
+  --default-font-family: "Mont-Regular",serif;
+  --default-font-family-bold: "Mont-Bold",serif;
+  --default-font-family-semibold: "Mont-SemiBold",serif;
+}
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bay-water-color) var(--dark-sky-color);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--dark-sky-color);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bay-water-color);
+  border-radius: 20px;
+  border: 1px solid var(--dark-sky-color);
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] { -moz-appearance:textfield; }
+body{
+  font-family: var(--default-font-family);
+  color: var(--default-color);
+}
+
+.c-brand{
+  width: 16rem;
+  margin-left: 5rem;
+}
+.sina-nav{
+  background-color: var(--dark-sky-color);
+  color: #fff;
+  border: none;
+}
+.sina-nav.mobile-sidebar .navbar-collapse.show {
+    left: 0;
+    display: block;
+    padding: 10px 18px;
+    text-align: left;
+}
+.sina-nav.mobile-sidebar .navbar-collapse {
+    position: fixed;
+    overflow-x: hidden;
+    display: block;
+    z-index: 99;
+    width: 240px;
+    height: 100% !important;
+    max-height: 100%;
+    left: -240px;
+    top: 0;
+    padding: 0 0 60px;
+    margin: 0;
+    transition: all 0.4s ease-in-out;
+    background-color: var(--dark-sky-color);
+}
+.dropdown .dropdown-menu {
+    float: none;
+    position: relative;
+    left: 0;
+    box-shadow: 0 0 0;
+    border-radius: 0 0 0;
+    border: 0;
+    background-color: transparent;
+}
+sina-nav .sina-menu li .mega-menu-col-title, .sina-nav .sina-menu li a {
+    max-width: inherit;
+    padding: 12px;
+    font-weight: 400;
+    display: block;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 20px;
+    transition: all 0.3s ease-in-out;
+    color: #222;
+    border-top: none
+}
+.sina-nav ul li a {
+    display: block;
+    font-family: var(--default-font-family-semibold);
+    text-transform: none;
+    line-height: 20px;
+    text-decoration: none;
+    white-space: normal;
+    transition: all 0.3s ease-in-out;
+    background: #ff040400;
+}
+.sina-nav .sina-menu > li.active > a,
+.sina-nav .sina-menu > li > a:hover,
+.sina-nav .sina-menu > li > a:focus{
+  color: #fff;
+}
+.sina-nav.mobile-sidebar .sina-menu {
+    padding: 50px 0 0 0;
+    margin: 0;
+}
+.sina-nav .sina-menu > li:first-child > a {
+    border-top: 0;
+}
+
+
+body.mobile-left .sina-nav-wrapper {
+  margin-left: 240px;
+}
+body.mobile-right .sina-nav-wrapper {
+  margin-right: 0;
+}
+body .sina-nav-wrapper {
+  transition: all 0.4s ease-in-out;
+  position: relative;
+}
+.sina-nav .navbar-toggle{
+  color: #fff;
+  display: inline-block;
+  position: relative;
+  float: left;
+  font-size: 18px;
+  margin: 12px 0px 0px 14px;
+  padding: 4px 10px;
+  width: 38px;
+  cursor: pointer;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+.sina-nav .sina-menu > li > a:hover{
+  color: #fff;
+  font-size: 11pt;
+}
+.sina-nav .sina-menu .dropdown-menu li.active > a,
+.sina-nav .sina-menu .dropdown-menu li > a:hover,
+.sina-nav .sina-menu .dropdown-menu li > a:focus {
+  background-color: var(--dark-sky-color);
+}
+
+
+.sina-nav .sina-menu > li > a {
+  color: #fff;
+}
+.sina-nav .sina-menu .dropdown-menu {
+  background-color: var(--dark-sky-color);
+  color:#fff;
+  margin-left: 20px;
+}
+.sina-nav .sina-menu .dropdown-menu li a{
+  color:#fff;
+}
+.sina-nav .sina-menu .dropdown-menu li.active > a,
+.sina-nav .sina-menu .dropdown-menu li > a:hover,
+.sina-nav .sina-menu .dropdown-menu li > a:focus{
+  color:#fff;
+  font-weight: bold;
+}
+@media (max-width: 1024px) {
+  .sina-nav.mobile-sidebar .navbar-collapse.show {
+    background-color: var(--dark-sky-color);
+    border: none;
+  }
+  .sina-nav .sina-menu li a:hover,
+  .sina-nav .sina-menu li a:focus,
+  .sina-nav .sina-menu li.active > a,
+  .sina-nav .sina-menu li .mega-menu-col-title:hover,
+  .sina-nav .sina-menu li .mega-menu.dropdown-menu .mega-menu-col .active > a,
+  .sina-nav .sina-menu li .dropdown-menu li.active > a,
+  .sina-nav .sina-menu li .dropdown-menu li a:hover,
+  .sina-nav .sina-menu li .dropdown-menu li a:focus,
+  .sina-nav .sina-menu li .mega-menu .mega-menu-col ul li a:hover,
+  .sina-nav .sina-menu li .mega-menu .mega-menu-col ul li a:focus{
+    background-color: var(--dark-sky-color);
+    color: #fff !important;
+  }
+}
