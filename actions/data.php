@@ -46,10 +46,14 @@ function getData()
     }else{
         $fuel = $_GET['fuel'];
     }
-    
-    
 
+
+    $associate = getAssociated($id);
     $locations = getLocations($lat, $lng,$permiso,$fuel);
+
+    if (count($associate) > 0) {
+        $locations = joinAssociatedLocations($locations, $associate,$permiso);
+    }
 
     $permissionsToStr = "'{$permiso}'" . locationsToString($locations);
     $history = setDistance(getHistory($startDate,$endDate,$permissionsToStr,$fuel,$time), $locations);
@@ -156,6 +160,7 @@ function getLocations($lat, $lng, $permiso, $fuel = 1, $ratio = 40)
             'wc' => (int) $r['BANOS'],
             'food' => (int) $r['RESTAURANTE'],
             'shop' => (int) $r['TIENDA'],
+            'isCurrent' => $r['PERMISO'] == $permiso ? (int) 1 : (int) 0
         ];
     }
     
@@ -742,6 +747,26 @@ function joinAssociated($original, $associate){
     }
 
     return ['contains' => $contains, 'no_contains' => $noContains];
+}
+
+function joinAssociatedLocations($original, $associate,$current)
+{
+    // print_r($original); exit;
+    $permiso = trim($_GET['permiso']);
+    $contains = [];
+    $noContains = [];
+    foreach ($original as $ori) {
+        if($ori['permiso'] == $current){
+            $contains[] = $ori;
+        }
+        if (in_array($ori['permiso'], $associate)) {
+            $contains[] = $ori;
+        } else {
+            $noContains[] = $ori;
+        }
+    }
+
+    return $contains;
 }
 
 function removeAssociated($id){

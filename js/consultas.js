@@ -102,7 +102,7 @@ $('.search-btn').click(function () {
 $(".download").click(function () {
     let table = document.getElementById("table-data");
     TableToExcel.convert(table, { 
-        name: `export.xlsx`, 
+        name: `SCPI- consulta.xlsx`, 
         sheet: {
             name: 'Sheet 1' 
         }
@@ -111,6 +111,8 @@ $(".download").click(function () {
 
 $("#download_all").click(function () {
     $('#loading').modal('show')
+    $('.th-add-all').remove();
+    $('#data-all').html('');
     getAllData();
     
 });
@@ -205,6 +207,7 @@ function AddMarker(map, locations) {
 
     let permiso;
     const url = 'https://petrointelligence.com/sistema/indices/';
+    let j = 0;
     for (const i of locations) {
         permiso = i.permiso;
         let category = ({
@@ -233,9 +236,14 @@ function AddMarker(map, locations) {
             services += `<img src="${url}restaurante.png" style="width:15px;">`;
         if (i.shop)
             services += `<img src="${url}tienda.png" style="width:15px;">`;
+        
+        current = '';
+        if (i.isCurrent) {
+            current = '<i class="fas fa-location-arrow" style="color: #00b34d;"></i>';
+        }
 
         let content = `
-            <a style="font-size:12px;">${permiso}</a>
+            <a style="font-size:12px;"> ${current} ${permiso}</a>
             <br>
             ${pre}
             <a style="font-size:15px;">${i.price}</a>
@@ -244,6 +252,8 @@ function AddMarker(map, locations) {
             <img src="${url}${category}" style="width:15px;"> 
             ${services}
         `;
+        current = '';
+        
         // 
         let infowindow = new google.maps.InfoWindow({
             content: content,
@@ -344,7 +354,7 @@ function getAllData() {
             makeTypeFuelHeader(data.data.fuels, data.data.days.length);
             let table = document.getElementById("table-data-all");
             TableToExcel.convert(table, {
-                name: `export-all.xlsx`,
+                name: `SCPI - consulta - todos los productos.xlsx`,
                 sheet: {
                     name: 'Sheet 1'
                 }
@@ -411,7 +421,7 @@ function fillTableAll(h,fuels,days) {
     let first = true;
 
     for (const i in history) {
-        makeRowAll(history[i].permiso, history[i].name, history[i].brand, parseFloat(history[i].distance).toFixed(2), history[i].fuels, first, fuels, days)
+        makeRowAll(history[i].permiso, history[i].name, history[i].brand, parseFloat(history[i].distance).toFixed(2), history[i].fuels, history[i].updated_at, first, fuels, days)
         first = false;
     }
 }
@@ -489,7 +499,7 @@ function makeHeader(data) {
 }
 
 function makeHeaderAll(data) {
-    $('#data-headers-all').append(`<th class="th-add" data-fill-color="e6e6e6" data-f-bold="true">${data}</th>`);
+    $('#data-headers-all').append(`<th class="th-add-all" data-fill-color="e6e6e6" data-f-bold="true">${data}</th>`);
 }
 
 function getFuelTypeData(pricesList, days, fuel, first = 0){
@@ -584,20 +594,22 @@ function makePriceAll(prices, first = 0) {
 
 function clearTable() {
     $('.th-add').remove();
+    $('.th-add-all').remove();
     $('#data').html('');
+    $('#data-all').html('');
 }
 
 function makeTypeFuelHeader(fuels, days){
     for (let i = 0; i < fuels.length; i++) {
         switch (fuels[i]) {
             case 1:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add text-center bg-success text-light" data-f-color="f8f9fa" data-fill-color="28a745" data-f-bold="true">Regular</td>`);
+                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-success text-light" data-f-color="f8f9fa" data-fill-color="28a745" data-f-bold="true">Regular</td>`);
                 break;
             case 2:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add text-center bg-danger text-light" data-f-color="f8f9fa" data-fill-color="dc3545" data-f-bold="true">Premium</td>`);
+                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-danger text-light" data-f-color="f8f9fa" data-fill-color="dc3545" data-f-bold="true">Premium</td>`);
                 break;
             case 3:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add text-center bg-dark  text-light" data-f-color="f8f9fa" data-fill-color="343a40" data-f-bold="true">Diesel</td>`);
+                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-dark  text-light" data-f-color="f8f9fa" data-fill-color="343a40" data-f-bold="true">Diesel</td>`);
                 break;
             default:
                 break;

@@ -187,6 +187,7 @@ function getHistory($startDate, $endDate, $permissions, $fuel, $time)
             TPL.gie,
             TPL.imagen,
             TPH.precio,
+            TPH.actualizado,
             TPH.combustible,
             MAX_C.fecha_registro as fecha_registro,
             CASE
@@ -272,7 +273,8 @@ function orderData($startDay, $endDay, $history)
                 'name' => $h['nombre'],
                 'brand' => $h['imagen'],
                 'distance' => 0,
-                'days' => getInterval($startDay, $endDay, $h['fecha_registro'], $h['precio'], $h['ATIPICO'], $h['ANTIGUO'])
+                'updated_at' => $h['actualizado'],
+                'days' => getInterval($startDay, $endDay, $h['fecha_registro'], $h['precio'], $h['ATIPICO'], $h['ANTIGUO']),
             );
         }
     }
@@ -339,6 +341,7 @@ function joinFuels($data){
                     'value' => $h['value'],
                     'name' => $h['name'],
                     'brand' => $h['brand'],
+                    'updated_at' => $h['updated_at'],
                     'distance' => $h['distance'],
                     'fuels' => [
                             $fuelType => [
