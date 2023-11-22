@@ -22,6 +22,7 @@ function main(){
         $current =  $delete_vars['current'];
         return removeAssociated($current);
     }else{
+        // sleep(3);
         getData();
     }
 }
@@ -638,7 +639,7 @@ function getAverageDays($permiso, $fuel, $startDate, $endDate)
 
     $sql = "SELECT DISTINCT 
             TPH.precio,
-            TPH.actualizado
+            Date(TPH.actualizado) as actualizado
         FROM   TBL_PRECIOS_DA_HISTORICOS2 AS TPH
         INNER JOIN 
             (SELECT fecha_registro, Max(id_carga) AS ID_CARGA
@@ -646,7 +647,7 @@ function getAverageDays($permiso, $fuel, $startDate, $endDate)
             WHERE  fecha_registro >= '{$from} 00:00:00'
             AND fecha_registro < '{$to} 00:00:00'
             and Time(fecha_registro) IN ('{$corte}')
-            GROUP  BY fecha_registro ) MAX_C
+            GROUP  BY fecha_registro) MAX_C
         ON TPH.id_carga = MAX_C.id_carga
         INNER JOIN 
             (SELECT TP.permiso,
@@ -711,7 +712,7 @@ function getAverageChange($prices){
 function getCorte(){
     $hour = date('H');
     
-    if ($hour >= 1 && $hour < 6) return '01:00:00';
+    if ($hour >= 0 && $hour < 6) return '01:00:00';
     if ($hour >= 6 && $hour < 8) return '06:00:00';
     if ($hour >= 8 && $hour < 11) return '08:00:00';
     if ($hour >= 11 && $hour < 15) return '11:00:00';
@@ -801,6 +802,5 @@ function getDiffPrice($prices){
         
     }
     $prices = array_combine($keys, $values);
-    // print_r($prices); exit;
     return $prices;
 }

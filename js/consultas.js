@@ -171,8 +171,11 @@ $("#delete_selected").click(function(){
     });
 });
 
+$(document).on("ajaxComplete", function () {
+    $('#loading').modal('show')
+});
 // Initialize and add the map
-function main(reload = false) {
+async function main(reload = false) {
     // The location of Uluru
     const uluru = { lat: lat, lng: lng };
     // The map, centered at Uluru
@@ -254,7 +257,6 @@ function AddMarker(map, locations) {
         `;
         current = '';
         
-        // 
         let infowindow = new google.maps.InfoWindow({
             content: content,
             ariaLabel: permiso,
@@ -268,7 +270,6 @@ function AddMarker(map, locations) {
         markers.push(marker);
         google.maps.event.addListener(marker, 'click', (function (marker) {
             return function () {
-                // infowindow.setContent(content);
                 infowindow.open(map, marker);
             }
         })(marker, i));
@@ -300,7 +301,7 @@ function getData(map = false, reload = true) {
         data: data,
         dataType: "JSON",
         success: function (data) {
-            // if(map)            
+            $('#loading').modal('hide');
             fillTable(data.data.history);
             addHeaders(data.data.days);
             makeMin(data.data.maxMin);
@@ -318,12 +319,19 @@ function getData(map = false, reload = true) {
                 $("#delete_selected").removeClass('d-none');
             }
             AddMarker(map, data.data.locations);
+            $('#loading').modal('hide');
 
         },
         error: function (e) {
             $('#loading').modal('hide')
             alertaError("Error inesperado, vuelve a interlo");
         },
+    });
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function () {
+        // El mapa ha terminado de cargar
+        console.log('El mapa ha terminado de cargar');
+        $('#loading').modal('hide');
+        // Puedes realizar acciones adicionales una vez que el mapa ha cargado completamente
     });
 }
 
@@ -347,8 +355,7 @@ function getAllData() {
         data: data,
         dataType: "JSON",
         success: function (data) {
-            console.log(data);
-            // // if(map)            
+            console.log(data);     
             fillTableAll(data.data.history,data.data.fuels,data.data.days);
             addHeadersAll(data.data.days, data.data.total_fuels);
             makeTypeFuelHeader(data.data.fuels, data.data.days.length);
@@ -359,15 +366,7 @@ function getAllData() {
                     name: 'Sheet 1'
                 }
             });
-            // makeMin(data.data.maxMin);
-            // makeMax(data.data.maxMin);
-            // makeAverageRow(data.data.averages);
-            // makeCards(data.data.cards);
-            // if (!reload) { setFuels(data.data.fuels); }
-            // $('#search-btn').hide();
             $('#loading').modal('hide');
-            // if (data.data.selected) { $(".selectRow").attr('checked', true) }
-            // AddMarker(map, data.data.locations);
 
         },
         error: function (e) {
@@ -427,7 +426,7 @@ function fillTableAll(h,fuels,days) {
 }
 
 function makeRow(com, name, brand, distance, price, updated_at, first) {
-    let prices = makePrice(price, first);
+    let prices = makePrice(price, null, 0, first);
     let style = first ? `class="here" data-fill-color="dff0d8"` : '';
     let cellStyle = first ? `data-fill-color="dff0d8"` : '';
     let ClenaCom = com.replace(/\//g, '');
@@ -455,7 +454,7 @@ function makeRow(com, name, brand, distance, price, updated_at, first) {
     $('#data').append(row);
 }
 function makeRowAll(com, name, brand, distance, price, updated_at, first,fuels,days) {
-    let prices = getFuelTypeData(price,days, fuels,first);
+    let prices = getFuelTypeData(price,days, fuels, first);
     let style = first ? `class="here" data-fill-color="dff0d8"` : '';
     let cellStyle = first ? `data-fill-color="dff0d8"` : '';
     let ClenaCom = com.replace(/\//g, '');
@@ -467,7 +466,6 @@ function makeRowAll(com, name, brand, distance, price, updated_at, first,fuels,d
             <td ${cellStyle}>${brand}</td>
             <td ${cellStyle}>${distance}Km.</td>
             ${prices}
-            <td>${updated_at}</td>
         </tr>
     `;
     $('#data-all').append(row);
@@ -486,6 +484,7 @@ function addHeadersAll(headers,totalFuels) {
         for (const i of headers) {
             makeHeaderAll(i);
         }
+        $('#data-headers-all').append(`<th class="th-add-all" data-fill-color="e6e6e6" data-f-bold="true">Último cambio de precio</th>`);
     }
     
 }
@@ -506,10 +505,10 @@ function getFuelTypeData(pricesList, days, fuel, first = 0){
     let prices;
     for (const i in fuel) {
         if (fuel[i] in pricesList){
-            prices += makePrice(pricesList[fuel[i]].days, first);
+            prices += makePrice(pricesList[fuel[i]].days, pricesList[fuel[i]].updated_at, 1, first);
         }else{
             let mock = makeMockPrice(days);
-            prices += makePrice(mock, first);
+            prices += makePrice(mock, '--', 1, first);
         }
         
     }
@@ -531,7 +530,7 @@ function makeMockPrice(days){
     return mock;
 }
 
-function makePrice(prices,first = 0) {
+function makePrice(prices, date, isAll = false, first = 0) {
     let price = '';
     let style = '';
     let cellStyle = first ? `data-fill-color="dff0d8"` : '';
@@ -562,6 +561,9 @@ function makePrice(prices,first = 0) {
         price += `<td class="${style} " ${cellStyle}><span class="d-flex">${arrow} ${prices[i].price}</span></td>`;
         style = '';
         arrow = '';
+    }
+    if(isAll){
+        price += `<td class="${style} " ${cellStyle}><span class="d-flex">${date}</span></td>`;
     }
 
     return price;
@@ -603,13 +605,13 @@ function makeTypeFuelHeader(fuels, days){
     for (let i = 0; i < fuels.length; i++) {
         switch (fuels[i]) {
             case 1:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-success text-light" data-f-color="f8f9fa" data-fill-color="28a745" data-f-bold="true">Regular</td>`);
+                $('#type_fuel').append(`<td colspan="${days + 1}" class="th-add-all text-center bg-success text-light" data-f-color="f8f9fa" data-fill-color="28a745" data-f-bold="true">Regular</td>`);
                 break;
             case 2:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-danger text-light" data-f-color="f8f9fa" data-fill-color="dc3545" data-f-bold="true">Premium</td>`);
+                $('#type_fuel').append(`<td colspan="${days + 1}" class="th-add-all text-center bg-danger text-light" data-f-color="f8f9fa" data-fill-color="dc3545" data-f-bold="true">Premium</td>`);
                 break;
             case 3:
-                $('#type_fuel').append(`<td colspan="${days}" class="th-add-all text-center bg-dark  text-light" data-f-color="f8f9fa" data-fill-color="343a40" data-f-bold="true">Diesel</td>`);
+                $('#type_fuel').append(`<td colspan="${days + 1}" class="th-add-all text-center bg-dark  text-light" data-f-color="f8f9fa" data-fill-color="343a40" data-f-bold="true">Diesel</td>`);
                 break;
             default:
                 break;

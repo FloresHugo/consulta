@@ -29,8 +29,12 @@ function getData()
     $fuels = getTotalFuel($permiso);
     $fuelList = $fuels['fuels'];
     $dataFuel = [];
+    $associate = getAssociated($id);
     foreach ($fuelList as $fuel) {
         $locations = getLocations($lat, $lng, $permiso, $fuel);
+        if (count($associate) > 0) {
+            $locations = joinAssociatedLocations($locations, $associate, $permiso);
+        }
         $permissionsToStr = "'{$permiso}'" . locationsToString($locations);
         $history = setDistance(getHistory($startDate, $endDate, $permissionsToStr, $fuel, $time), $locations);
         $dataFuel[$fuel] = $history;
@@ -335,18 +339,19 @@ function joinFuels($data){
         foreach ($value as $h) {
             if (array_key_exists($h['permiso'], $joined)) {
                 $joined[$h['permiso']]['fuels'][$fuelType]['days'] = $h['days'];
+                $joined[$h['permiso']]['fuels'][$fuelType]['updated_at'] = $h['updated_at'];
             } else {
                 $joined[$h['permiso']] = array(
                     'permiso' => $h['permiso'],
                     'value' => $h['value'],
                     'name' => $h['name'],
                     'brand' => $h['brand'],
-                    'updated_at' => $h['updated_at'],
                     'distance' => $h['distance'],
                     'fuels' => [
                             $fuelType => [
                                 'type' => $fuelType,
-                                'days' => $h['days']
+                                'days' => $h['days'],
+                                'updated_at' => $h['updated_at']
                             ]
                     ]
                     
@@ -375,4 +380,55 @@ function getIntervalDays($startDay, $endDay)
     }
 
     return $days;
+}
+
+function getAssociated($id)
+{
+    $sql = "SELECT * FROM TBL_VER_PERMISOS_SCPI WHERE registro = '$id'";
+    $result = execQuery($sql);
+    if (!$result) {
+        return [];
+    }
+    $associate = [];
+    foreach ($result as $r) {
+        $associate[] = $r['permiso'];
+    }
+    return $associate;
+}
+
+function joinAssociated($original, $associate)
+{
+    // print_r($original); exit;
+    $permiso = trim($_GET['permiso']);
+    $contains = [];
+    $noContains = [];
+    $contains[$original[$permiso]['permiso']] = $original[$permiso];
+    foreach ($original as $ori) {
+        if (in_array($ori['permiso'], $associate)) {
+            $contains[$ori['permiso']] = $ori;
+        } else {
+            $noContains[$ori['permiso']] = $ori;
+        }
+    }
+
+    return ['contains' => $contains, 'no_contains' => $noContains];
+}
+function joinAssociatedLocations($original, $associate, $current)
+{
+    // print_r($original); exit;
+    $permiso = trim($_GET['permiso']);
+    $contains = [];
+    $noContains = [];
+    foreach ($original as $ori) {
+        if ($ori['permiso'] == $current) {
+            $contains[] = $ori;
+        }
+        if (in_array($ori['permiso'], $associate)) {
+            $contains[] = $ori;
+        } else {
+            $noContains[] = $ori;
+        }
+    }
+
+    return $contains;
 }

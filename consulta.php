@@ -125,7 +125,7 @@ if (!is_array($result) || count($result) < 1) {
             </div>
             <div class="card text-center p-3 mx-md-3 mx-lg-3 mobile-width mx-1">
                 <strong class="h"><span id="products">0</span></strong>
-                <span class="mobile-description">Número de</span>
+                <span class="mobile-description">Productos que</span>
                 <span class="mobile-description">expide la estación analizada</span>
             </div>
         </div>
@@ -328,8 +328,8 @@ if (isset($_SESSION['msg'])) {
     showMessage($_SESSION['msg']);
 }
 ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1M46qsHc1CSmoEaLa1cwRFihbT4sQOvo&amp;sensor=false"></script>
-<script src="/js/consultas.js"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1M46qsHc1CSmoEaLa1cwRFihbT4sQOvo&amp;sensor=false"></script>
+<script async src="/js/consultas.js"></script>
 <script src="/assets/js/jquery-ui.js" charset="utf-8"></script>
 <script src="/js/dates.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
