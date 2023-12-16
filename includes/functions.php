@@ -44,4 +44,19 @@
     }
     return true;
   }
+function validateParamsJson($paramsJson,$params)
+{
+  for ($i = 0; $i < count($params); $i++) {
+    if (!isset($paramsJson[$params[$i]]) || empty($paramsJson[$params[$i]])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function paramsFromJson(){
+  $json = file_get_contents('php://input');
+  $paramsJson = json_decode($json, true);
+  return $paramsJson;
+}
  ?>

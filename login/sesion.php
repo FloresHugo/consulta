@@ -18,7 +18,7 @@
   // global $routs;
 
   $login = false;
-  if($_SERVER['REQUEST_METHOD'] == 'POST'){
+  if($_SERVER['REQUEST_METHOD'] == 'POST' &&  !isset($isApi)){
 
     login();
   }
@@ -80,6 +80,23 @@
 
     // print_r($_SESSION);
   }
+
+function loginApi($user,$password)
+{
+
+  $sql = "select id,password from TBL_USER_CONSULTAS where name = '{$user}'";
+
+  $registro = execQuery($sql);
+
+  if ($registro->num_rows > 0) {
+    foreach ($registro as $r) {
+      if (password_verify($password, $r['password'])) {
+        return $r['id'];
+      }
+    }
+  }
+  return false;
+}
 
   function logout(){
     unset($_SESSION['user_admin']);

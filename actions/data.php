@@ -14,7 +14,9 @@ require_once($_SESSION['paths']);
 require_once($enviroment['db']);
 require_once($enviroment['function']);
 
-main();
+if (!defined('include')) {
+    main();
+}
 
 function main(){
     if($_SERVER['REQUEST_METHOD']  == "DELETE"){
@@ -27,25 +29,34 @@ function main(){
     }
 }
 
-function getData()
+function getData($lat = 0,$lng = 0, $permiso ='',$startDate = '', $endDate = '',$id = 0, $reload = '',$fuel = '', $time = '')
 {
 
-    $lat = $_GET['lat'];
-    $lng = $_GET['lng'];
-    $permiso = trim($_GET['permiso']);
-    $startDate = validateDate($_GET['startDate']);
-    $endDate = $_GET['endDate'];
-    $id  = $_GET['current'];
-    
-    $time = $_GET['time'];
-    $reload = $_GET['reload'];
-    $fuels = getTotalFuel($permiso);
-    
-    if(!isset($_GET['fuel']) && empty($_GET['fuel'])){        
-        $fuelList = $fuels['fuels'];
-        $fuel = $fuelList[0];
+    if (!defined('include')) {
+        $lat = $_GET['lat'];
+        $lng = $_GET['lng'];
+        $permiso = trim($_GET['permiso']);
+        $startDate = validateDate($_GET['startDate']);
+        $endDate = $_GET['endDate'];
+        $id  = $_GET['current'];
+
+        $time = $_GET['time'];
+        $reload = $_GET['reload'];
+        $fuels = getTotalFuel($permiso);
+        if (!isset($_GET['fuel']) && empty($_GET['fuel'])) {
+            $fuelList = $fuels['fuels'];
+            $fuel = $fuelList[0];
+        } else {
+            $fuel = $_GET['fuel'];
+        }
     }else{
-        $fuel = $_GET['fuel'];
+        $fuels = getTotalFuel($permiso);
+        if (!isset($fuel) && empty($fuel)) {
+            $fuelList = $fuels['fuels'];
+            $fuel = $fuelList[0];
+        } else {
+            $fuel = $fuel;
+        }
     }
 
 
@@ -92,6 +103,9 @@ function getData()
     $response['data']['fuels']['keys'] = $fuels['fuels'];
     $response['data']['fuels']['products'] = setProducts($fuels['fuels']);
 
+    if(defined('include')){
+        return $response;
+    }
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($response);
 }
@@ -309,6 +323,7 @@ function getHistory($startDate, $endDate, $permissions,$fuel,$time)
         WHERE TPH.combustible={$fuel}
         AND TPL.PERMISO in ({$permissions})
     ";
+    // echo $sql; exit;
     $result = mysqli_fetch_all(execQuery($sql),MYSQLI_ASSOC);
     $ordered = orderData($startDate, $endDate,$result);
     return validatePricesDifference($ordered);

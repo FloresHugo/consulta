@@ -5,6 +5,14 @@ RewriteEngine On
 # RewriteRule ^panel-admin/editar/(.*)$ panel-admin/editar.php?menu=$1
 RewriteRule ^consulta/(.*)$ consulta.php?permiso=$1
 
+#API Routes
+RewriteCond %{QUERY_STRING} permiso=([^&]+)
+RewriteRule ^api/new_record/search$ api/new_record.php?type=search&permiso=%1 [L]
+RewriteRule ^api/new_record/save$ api/new_record.php?type=save [L]
+RewriteRule ^api/new_record/edit$ api/new_record.php?type=edit [L]
+RewriteRule ^api/new_record/delete$ api/new_record.php?type=delete [L]
+RewriteRule ^api/detail/(\d+)$ api/detail.php?record=$1 [QSA]
+
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f

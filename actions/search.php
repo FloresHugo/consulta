@@ -11,30 +11,35 @@ require_once($_SESSION['paths']);
 require_once($enviroment['db']);
 require_once($enviroment['function']);
 require_once('searchActions.php');
+if(!isset($include)){
+$type = empty($_REQUEST['type']) || !isset($_REQUEST['type']) ? '' : $_REQUEST['type'];
 $type = empty($_REQUEST['type']) || !isset($_REQUEST['type']) ? '' : $_REQUEST['type'];
 
-switch ($type) {
-    case 'search':
-        search();
-        exit;
-        break;
-    case 'edit':
-        edit();
-        exit;
-        break;
-    case 'delete':
-        delete();
-        exit;
-        break;
+    $type = empty($_REQUEST['type']) || !isset($_REQUEST['type']) ? '' : $_REQUEST['type'];
 
-    default:
-        if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-            http_response_code(404);
+    switch ($type) {
+        case 'search':
+            search();
             exit;
-        }
-        save();
+            break;
+        case 'edit':
+            edit();
+            exit;
+            break;
+        case 'delete':
+            delete();
+            exit;
+            break;
 
-        break;
+        default:
+            if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                http_response_code(404);
+                exit;
+            }
+            save();
+
+            break;
+    }
 }
 
 function search()
